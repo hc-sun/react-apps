@@ -6,7 +6,7 @@ const initialGameBoard = [
   [null, null, null],
 ];
 
-export default function GameBoard() {
+export default function GameBoard({ onSelectSquare, activePlayerSymbol }) {
   const [gameBaord, setGameBoard] = useState(initialGameBoard);
 
   function handleClickBoard(rowIndex, colIndex) {
@@ -15,9 +15,12 @@ export default function GameBoard() {
       const updatedGameBoard = [
         ...prevGameBoard.map((innerArray) => [...innerArray]),
       ];
-      updatedGameBoard[rowIndex][colIndex] = "X";
+      updatedGameBoard[rowIndex][colIndex] = activePlayerSymbol;
       return updatedGameBoard;
     });
+
+    // onSelectSquare is triggered by handleClickBoard once click a button, which is lifted to App.jsx to switch player
+    onSelectSquare();
   }
 
   return (
@@ -27,7 +30,9 @@ export default function GameBoard() {
           <ol>
             {row.map((playerSymbol, colIndex) => (
               <li key={colIndex}>
-                <button onClick={() => handleClickBoard(rowIndex, colIndex)}>{playerSymbol}</button>
+                <button onClick={() => handleClickBoard(rowIndex, colIndex)}>
+                  {playerSymbol}
+                </button>
               </li>
             ))}
           </ol>
