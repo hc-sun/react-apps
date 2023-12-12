@@ -2,6 +2,7 @@ import { useState } from "react";
 import Player from "./components/Player";
 import GameBoard from "./components/GameBoard";
 import Log from "./components/Log";
+import { WINNING_CONDITIONS } from "./winning-conditions";
 
 function deriveActivePlayer(gameTurns) {
   let currPlayer = "X";
@@ -13,10 +14,42 @@ function deriveActivePlayer(gameTurns) {
   return currPlayer;
 }
 
+const initialGameBoard = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
+
 function App() {
   const [gameTurns, setGameTurns] = useState([]);
 
   const activePlayer = deriveActivePlayer(gameTurns);
+
+  let gameBoard = initialGameBoard;
+
+  for (const turn of gameTurns) {
+    const { square, player } = turn;
+    const { row, col } = square;
+
+    // update gameBoard
+    gameBoard[row][col] = player;
+  }
+
+  let winner = null;
+  for (const condition of WINNING_CONDITIONS) {
+    // destructuring
+    const [a, b, c] = condition;
+
+    // check if all 3 squares are the same non-null value
+    if (
+      gameBoard[a.row][a.col] &&
+      gameBoard[a.row][a.col] === gameBoard[b.row][b.col] &&
+      gameBoard[a.row][a.col] === gameBoard[c.row][c.col]
+    ) {
+      winner = gameBoard[a.row][a.col];
+      break;
+    }
+  }
 
   function handleSwitchPlayer(rowIndex, colIndex) {
     setGameTurns((prevTurns) => {
@@ -46,7 +79,8 @@ function App() {
             isActive={activePlayer === "O"}
           />
         </ol>
-        <GameBoard onSelectSquare={handleSwitchPlayer} turns={gameTurns} />
+        {winner && <p> {winner} won!</p>}
+        <GameBoard onSelectSquare={handleSwitchPlayer} board={gameBoard} />
       </div>
       <Log turns={gameTurns} />
     </main>
