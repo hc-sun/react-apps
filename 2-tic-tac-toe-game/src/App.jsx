@@ -3,6 +3,7 @@ import Player from "./components/Player";
 import GameBoard from "./components/GameBoard";
 import Log from "./components/Log";
 import { WINNING_CONDITIONS } from "./winning-conditions";
+import GameOver from "./components/GameOver";
 
 function deriveActivePlayer(gameTurns) {
   let currPlayer = "X";
@@ -51,6 +52,9 @@ function App() {
     }
   }
 
+  // no winner, but board is full
+  const isBoardFull = gameTurns.length === 9 && !winner;
+
   function handleSwitchPlayer(rowIndex, colIndex) {
     setGameTurns((prevTurns) => {
       const currPlayer = deriveActivePlayer(prevTurns);
@@ -79,7 +83,7 @@ function App() {
             isActive={activePlayer === "O"}
           />
         </ol>
-        {winner && <p> {winner} won!</p>}
+        {(winner || isBoardFull) && <GameOver winner={winner} />}
         <GameBoard onSelectSquare={handleSwitchPlayer} board={gameBoard} />
       </div>
       <Log turns={gameTurns} />
