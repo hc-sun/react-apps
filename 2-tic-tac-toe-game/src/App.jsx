@@ -51,7 +51,7 @@ function App() {
       gameBoard[a.row][a.col] === gameBoard[b.row][b.col] &&
       gameBoard[a.row][a.col] === gameBoard[c.row][c.col]
     ) {
-      winner = gameBoard[a.row][a.col];
+      winner = players[gameBoard[a.row][a.col]];
       break;
     }
   }
@@ -76,11 +76,11 @@ function App() {
     setGameTurns([]);
   }
 
-  function handlePlayerNameChange(playerSymbol, newName) {
+  function handlePlayerNameChange(symbol, newName) {
     setPlayers((prevPlayers) => {
       const updatedPlayers = {
         ...prevPlayers,
-        [playerSymbol]: newName,
+        [symbol]: newName,
       };
 
       return updatedPlayers;
@@ -95,11 +95,13 @@ function App() {
             initialName="Player 1"
             symbol="X"
             isActive={activePlayer === "X"}
+            onChangeName={handlePlayerNameChange}
           />
           <Player
             initialName="Player 2"
             symbol="O"
             isActive={activePlayer === "O"}
+            onChangeName={handlePlayerNameChange}
           />
         </ol>
         {(winner || isBoardFull) && (
