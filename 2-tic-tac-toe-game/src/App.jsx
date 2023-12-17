@@ -15,22 +15,19 @@ function deriveActivePlayer(gameTurns) {
   return currPlayer;
 }
 
-const initialGameBoard = [
+const PLAYERS = {
+  X: "Player 1",
+  O: "Player 2",
+};
+
+const INITIAL_GAMEBOARD = [
   [null, null, null],
   [null, null, null],
   [null, null, null],
 ];
 
-function App() {
-  const [players, setPlayers] = useState({
-    X: "Player 1",
-    O: "Player 2",
-  });
-  const [gameTurns, setGameTurns] = useState([]);
-
-  const activePlayer = deriveActivePlayer(gameTurns);
-
-  let gameBoard = [...initialGameBoard.map((row) => [...row])];
+function updateGameBoard(gameTurns) {
+  let gameBoard = [...INITIAL_GAMEBOARD.map((row) => [...row])];
 
   for (const turn of gameTurns) {
     const { square, player } = turn;
@@ -39,7 +36,10 @@ function App() {
     // update gameBoard
     gameBoard[row][col] = player;
   }
+  return gameBoard;
+}
 
+function checkWinner(gameBoard, players) {
   let winner = null;
   for (const condition of WINNING_CONDITIONS) {
     // destructuring
@@ -55,6 +55,18 @@ function App() {
       break;
     }
   }
+  return winner;
+}
+
+function App() {
+  const [players, setPlayers] = useState(PLAYERS);
+  const [gameTurns, setGameTurns] = useState([]);
+
+  const activePlayer = deriveActivePlayer(gameTurns);
+
+  const gameBoard = updateGameBoard(gameTurns);
+
+  const winner = checkWinner(gameBoard, players);
 
   // no winner, but board is full
   const isBoardFull = gameTurns.length === 9 && !winner;
@@ -92,13 +104,13 @@ function App() {
       <div id="game-container">
         <ol id="players" className="highlight-player">
           <Player
-            initialName="Player 1"
+            initialName={players.X}
             symbol="X"
             isActive={activePlayer === "X"}
             onChangeName={handlePlayerNameChange}
           />
           <Player
-            initialName="Player 2"
+            initialName={players.O}
             symbol="O"
             isActive={activePlayer === "O"}
             onChangeName={handlePlayerNameChange}
