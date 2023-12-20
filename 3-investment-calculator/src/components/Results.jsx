@@ -8,7 +8,7 @@ export default function Results({ input }) {
     results[0].interest;
 
   return (
-    <table id="results">
+    <table id="result">
       <thead>
         <tr>
           <th>Year</th>
