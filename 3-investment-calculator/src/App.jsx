@@ -15,7 +15,7 @@ function App() {
   function handleChange(inputType, newValue) {
     setUserInput((prevState) => {
       // only update the value that has changed based on inputType
-      return { ...prevState, [inputType]: newValue };
+      return { ...prevState, [inputType]: +newValue };
     });
   }
 
