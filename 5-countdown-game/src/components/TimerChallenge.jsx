@@ -13,7 +13,7 @@ export default function TimerChallenge({ title, targetTime }) {
     // store the timeout id in the ref
     timer.current = setTimeout(() => {
       setTimerExpired(true);
-      dialog.current.showModal();
+      dialog.current.openDiag();
     }, targetTime * 1000);
 
     setTimerStarted(true);
