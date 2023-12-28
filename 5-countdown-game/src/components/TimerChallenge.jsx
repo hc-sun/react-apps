@@ -6,21 +6,28 @@ export default function TimerChallenge({ title, targetTime }) {
   const timer = useRef();
   const dialog = useRef();
 
-  const [timerStarted, setTimerStarted] = useState(false);
-  const [timerExpired, setTimerExpired] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState(targetTime * 1000);
 
+  const timerStarted = timeRemaining < targetTime * 1000 && timeRemaining > 0;
+
+  // if the time remaining is less than or equal to 0, clear the interval and open the dialog
+  if (timeRemaining <= 0) {
+    clearInterval(timer.current);
+    setTimeRemaining(targetTime * 1000);
+    dialog.current.openDiag();
+  }
+
+  // if the timer is started, start the interval
   function handleStart() {
-    // store the timeout id in the ref
-    timer.current = setTimeout(() => {
-      setTimerExpired(true);
-      dialog.current.openDiag();
-    }, targetTime * 1000);
-
-    setTimerStarted(true);
+    // store the timer id in the ref
+    timer.current = setInterval(() => {
+      setTimeRemaining((prevTimeRemaining) => prevTimeRemaining - 10);
+    }, 10);
   }
 
   function handleStop() {
-    clearTimeout(timer.current);
+    dialog.current.openDiag();
+    clearInterval(timer.current);
   }
 
   return (
