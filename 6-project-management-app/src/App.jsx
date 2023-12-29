@@ -20,11 +20,27 @@ function App() {
     });
   }
 
+  function handleCreateProject(projectData) {
+    setProjectState((prevState) => {
+      const newProject = {
+        ...projectData,
+        id: Math.random(),
+      };
+
+      return {
+        ...prevState,
+        projects: [...prevState.projects, newProject],
+      };
+    });
+  }
+
+  console.log(projectState);
+
   let content;
 
   // check if project exists to show correct component
   if (projectState.selectedProjectId === null) {
-    content = <NewProject />;
+    content = <NewProject onCreateProject={handleCreateProject} />;
   } else if (projectState.selectedProjectId === undefined) {
     content = <NoProjectSelected onCreateProject={handleCreatingProject} />;
   }
