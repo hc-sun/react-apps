@@ -20,6 +20,15 @@ function App() {
     });
   }
 
+  function handleCancelCreatingProject() {
+    setProjectState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+      };
+    });
+  }
+
   function handleCreateProject(projectData) {
     setProjectState((prevState) => {
       const projectId = Math.random();
@@ -40,7 +49,12 @@ function App() {
 
   // check if project exists to show correct component
   if (projectState.selectedProjectId === null) {
-    content = <NewProject onCreateProject={handleCreateProject} />;
+    content = (
+      <NewProject
+        onCreateProject={handleCreateProject}
+        onCancel={handleCancelCreatingProject}
+      />
+    );
   } else if (projectState.selectedProjectId === undefined) {
     content = <NoProjectSelected onCreateProject={handleCreatingProject} />;
   }
