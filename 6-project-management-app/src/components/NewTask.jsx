@@ -1,13 +1,16 @@
 import { useState } from "react";
 
 export default function NewTask({ onCreate }) {
-  const [taskContent, setTaskContent] = useState();
+  const [taskContent, setTaskContent] = useState("");
 
   function handleChange(event) {
     setTaskContent(event.target.value);
   }
 
   function handleClick() {
+    if (taskContent.trim() === "") {
+      return;
+    }
     onCreate(taskContent);
     setTaskContent("");
   }
