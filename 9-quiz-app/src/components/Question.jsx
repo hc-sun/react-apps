@@ -36,9 +36,13 @@ export default function Question({
 
   let answerState = "";
 
-  // if answer is selected, update answerState
-  if (answer.selectedAnswer) {
+  // if an answer is selected
+  if (answer.selectedAnswer && answer.isCorrect !== null) {
     answerState = answer.isCorrect ? "correct" : "wrong";
+  }
+  // if an answer is selected, but correct/wrong hasn't been determined yet (before timeout)
+  else if (answer.selectedAnswer) {
+    answerState = "answered";
   }
 
   return (
