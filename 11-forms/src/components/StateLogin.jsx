@@ -8,8 +8,13 @@ export default function Login() {
     password: "",
   });
 
-  const emailIsInvalid =
-    enteredData.email !== "" && !enteredData.email.includes("@");
+  const [edited, setEdited] = useState({
+    email: false,
+    password: false,
+  });
+
+  // set emailIsInvalid to true if lose focus on email input and email is not valid
+  const emailIsInvalid = edited.email && !enteredData.email.includes("@");
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -30,6 +35,19 @@ export default function Login() {
       ...prevState,
       [identifier]: value,
     }));
+
+    // set edited back to false when user starts to type
+    setEdited((prevState) => ({
+      ...prevState,
+      [identifier]: false,
+    }));
+  }
+
+  function handleInputBlur(identifier) {
+    setEdited((prevState) => ({
+      ...prevState,
+      [identifier]: true,
+    }));
   }
 
   return (
@@ -43,6 +61,7 @@ export default function Login() {
             id="email"
             type="email"
             name="email"
+            onBlur={() => handleInputBlur("email")}
             onChange={(event) => handleInputChange("email", event.target.value)}
             value={enteredData.email}
           />
