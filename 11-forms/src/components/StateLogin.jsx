@@ -1,61 +1,36 @@
-import { useState } from "react";
-
 import Input from "./Input";
 import { isEmail, isNotEmpty, hasMinLength } from "../util/validation.js";
+import { useInput } from "../hooks/useInput.js";
 
 export default function Login() {
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  const [enteredData, setEnteredData] = useState({
-    email: "",
-    password: "",
-  });
+  const {
+    value: emailValue,
+    handleInputChange: handleEmailChange,
+    handleInputBlur: handleEmailBlur,
+    hasError: emailHasError,
+  } = useInput("", (value) => isEmail(value) && isNotEmpty(value));
 
-  const [edited, setEdited] = useState({
-    email: false,
-    password: false,
-  });
-
-  // set emailIsInvalid to true if lose focus on email input and email is not valid
-  const emailIsInvalid =
-    edited.email &&
-    !isEmail(enteredData.email) &&
-    !isNotEmpty(enteredData.email);
-  const passwordIsInvalid =
-    edited.password && !hasMinLength(enteredData.password, 6);
+  const {
+    value: passwordValue,
+    handleInputChange: handlePasswordChange,
+    handleInputBlur: handlePasswordBlur,
+    hasError: passwordHasError,
+  } = useInput("", (value) => hasMinLength(value, 6));
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(enteredData);
+
+    if (emailHasError || passwordHasError) {
+      return;
+    }
+
+    console.log(emailValue, passwordValue);
 
     // // reset form
     // setEnteredData({
     //   email: "",
     //   password: "",
     // });
-  }
-
-  // function handleEmailChange(event) {
-  //   setEmail(event.target.value);
-  // }
-  function handleInputChange(identifier, value) {
-    setEnteredData((prevState) => ({
-      ...prevState,
-      [identifier]: value,
-    }));
-
-    // set edited back to false when user starts to type
-    setEdited((prevState) => ({
-      ...prevState,
-      [identifier]: false,
-    }));
-  }
-
-  function handleInputBlur(identifier) {
-    setEdited((prevState) => ({
-      ...prevState,
-      [identifier]: true,
-    }));
   }
 
   return (
@@ -68,22 +43,20 @@ export default function Login() {
           id="email"
           type="email"
           name="email"
-          onBlur={() => handleInputBlur("email")}
-          onChange={(event) => handleInputChange("email", event.target.value)}
-          value={enteredData.email}
-          error={emailIsInvalid && "Please enter a valid email address"}
+          onBlur={handleEmailBlur}
+          onChange={handleEmailChange}
+          value={emailValue}
+          error={emailHasError && "Please enter a valid email address"}
         />
         <Input
           label="Password"
           id="password"
           type="password"
           name="password"
-          onChange={(event) =>
-            handleInputChange("password", event.target.value)
-          }
-          onBlur={() => handleInputBlur("password")}
-          value={enteredData.password}
-          error={passwordIsInvalid && "Password must be at least 6 characters"}
+          onChange={handlePasswordChange}
+          onBlur={handlePasswordBlur}
+          value={passwordValue}
+          error={passwordHasError && "Password must be at least 6 characters"}
         />
       </div>
 
