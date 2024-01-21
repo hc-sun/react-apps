@@ -18,10 +18,10 @@ function cartReducer(state, action) {
 
     // if item already exists in cart, update quantity
     if (existingCartItemIndex !== -1) {
-      const existingCartItems = state.items[existingCartItemIndex];
+      const existingCartItem = state.items[existingCartItemIndex];
       const updatedItem = {
-        ...existingCartItems,
-        quantity: existingCartItems.quantity + 1,
+        ...existingCartItem,
+        quantity: existingCartItem.quantity + 1,
       };
 
       // replace existing item with updated item quantity
@@ -34,6 +34,32 @@ function cartReducer(state, action) {
     // overwrite existing state with updated items
     return { ...state, items: updatedItems };
   }
+
+  if (action.type === "REMOVE_ITEM") {
+    // check if item already exists in cart
+    const existingCartItemIndex = state.items.findIndex(
+      (item) => item.id === action.id
+    );
+
+    const existingCartItem = state.items[existingCartItemIndex];
+
+    if (existingCartItem.quantity === 1) {
+      // if only one item, remove item completely from cart
+      const updatedItems = state.items.filter((item) => item.id !== action.id);
+    } else {
+      // if more than one item, update quantitDy
+      const updatedItem = {
+        ...existingCartItem,
+        quantity: existingCartItem.quantity - 1,
+      };
+      const updatedItems = [...state.items];
+      updatedItems[existingCartItemIndex] = updatedItem;
+    }
+
+    return { ...state, items: updatedItems };
+  }
+
+  return state;
 }
 
 export function CartContextProvider({ children }) {
@@ -41,7 +67,23 @@ export function CartContextProvider({ children }) {
     items: [],
   });
 
-  return <CartContext.Provider>{children}</CartContext.Provider>;
+  function addItem(item) {
+    dispatchCartAction({ type: "ADD_ITEM", item: item });
+  }
+
+  function removeItem(id) {
+    dispatchCartAction({ type: "REMOVE_ITEM", id: id });
+  }
+
+  const cartContext = {
+    items: cartState.items,
+    addItem: addItem,
+    removeItem: removeItem,
+  };
+
+  return (
+    <CartContext.Provider value={cartContext}>{children}</CartContext.Provider>
+  );
 }
 
 export default CartContext;
