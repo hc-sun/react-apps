@@ -43,16 +43,17 @@ function cartReducer(state, action) {
 
     const existingCartItem = state.items[existingCartItemIndex];
 
+    const updatedItems = [...state.items];
+
     if (existingCartItem.quantity === 1) {
       // if only one item, remove item completely from cart
-      const updatedItems = state.items.filter((item) => item.id !== action.id);
+      updatedItems.splice(existingCartItemIndex, 1);
     } else {
       // if more than one item, update quantitDy
       const updatedItem = {
         ...existingCartItem,
         quantity: existingCartItem.quantity - 1,
       };
-      const updatedItems = [...state.items];
       updatedItems[existingCartItemIndex] = updatedItem;
     }
 
