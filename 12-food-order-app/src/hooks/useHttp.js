@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 async function sendHttpRequest(url, config) {
-  const response = await etch(url, config);
+  const response = await fetch(url, config);
 
   const responseData = await response.json();
 
@@ -12,8 +12,8 @@ async function sendHttpRequest(url, config) {
   return responseData;
 }
 
-export default function useHttp(url, config) {
-  const [data, setData] = useState();
+export default function useHttp(url, config, initialData) {
+  const [data, setData] = useState(initialData);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
 
@@ -21,7 +21,7 @@ export default function useHttp(url, config) {
     async function sendRequest() {
       setIsLoading(true);
       try {
-        const responseData = sendHttpRequest(url, config);
+        const responseData = await sendHttpRequest(url, config);
         setData(responseData);
       } catch (error) {
         setError(error.message || "Something went wrong!");
@@ -32,7 +32,7 @@ export default function useHttp(url, config) {
   );
 
   useEffect(() => {
-    if (config && config.method === "GET") {
+    if ((config && (config.method === "GET" || !config.method)) || !config) {
       sendRequest();
     }
   }, [sendRequest, config]);
