@@ -36,6 +36,11 @@ export default function Checkout() {
     userProgressCtx.hideCheckout();
   }
 
+  function handleFinish() {
+    userProgressCtx.hideCheckout();
+    cartCtx.clearCart();
+  }
+
   function handleSubmit(event) {
     // prevent default form submission
     event.preventDefault();
@@ -78,6 +83,21 @@ export default function Checkout() {
 
   if (isSending) {
     actions = <span>Sending order data...</span>;
+  }
+
+  if (data && !error) {
+    return (
+      <Modal
+        open={userProgressCtx.progress === "checkout"}
+        onClose={handleFinish}
+      >
+        <h2>Order sent successfully!</h2>
+        <p>Thank you for your order!</p>
+        <p className="modal-actions">
+          <Button onClick={handleFinish}>Close</Button>
+        </p>
+      </Modal>
+    );
   }
 
   return (
