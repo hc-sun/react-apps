@@ -11,10 +11,21 @@ function App() {
 
   // send cart data to server after updating redux store
   useEffect(() => {
-    fetch("https://react-http-e6628-default-rtdb.firebaseio.com/cart.json", {
-      method: "PUT",
-      body: JSON.stringify(cart),
-    });
+    const sendCartData = async () => {
+      const response = await fetch(
+        "https://react-http-e6628-default-rtdb.firebaseio.com/cart.json",
+        {
+          method: "PUT",
+          body: JSON.stringify(cart),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Sending cart data failed.");
+      }
+
+      const responseData = await response.json();
+    };
   }, [cart]);
 
   return (
