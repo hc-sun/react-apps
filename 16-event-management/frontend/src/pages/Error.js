@@ -10,7 +10,7 @@ function ErrorPage() {
   let message = "An unknown error occurred. Please try again later.";
 
   if (error.status === 500) {
-    message = JSON.parse(error.data).message;
+    message = error.data.message;
   }
 
   if (error.status === 404) {
