@@ -4,6 +4,7 @@ import EventsList from "../components/EventsList";
 
 function EventsPage() {
   const eventsData = useLoaderData();
+  const events = eventsData.events;
 
   return <EventsList events={eventsData} />;
 }
@@ -15,7 +16,6 @@ export async function loader() {
 
   if (!response.ok) {
   } else {
-    const resData = await response.json();
-    return resData.events;
+    return response;
   }
 }
