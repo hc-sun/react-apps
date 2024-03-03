@@ -37,6 +37,10 @@ export async function action({ request }) {
     throw json({ message: "Authentication failed" }, 500);
   }
 
+  const resData = await response.json();
+  const token = resData.token;
+  localStorage.setItem("token", token);
+
   //after login redirect to home page
   return redirect("/");
 }
