@@ -40,6 +40,8 @@ export async function action({ request }) {
   const resData = await response.json();
   const token = resData.token;
   localStorage.setItem("token", token);
+  const expires = new Date(Date.now() + 1 * 60 * 60 * 1000);
+  localStorage.setItem("expires", expires.toISOString());
 
   //after login redirect to home page
   return redirect("/");
